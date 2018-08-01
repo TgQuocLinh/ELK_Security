@@ -1,0 +1,68 @@
+- hosts: es_server
+  remote_user: root
+  
+  tasks:
+  
+  - name: Download Java8
+    apt:
+       name: openjdk-8-jre 
+
+  - name: Import the ELK PGP Key
+    apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+  - name: Download Elasticsearch package
+    get_url:
+        url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.2.deb
+        dest: /root/elasticsearch-6.3.2.deb
+
+  - name: Download Logstash package
+    get_url:
+        url: https://artifacts.elastic.co/downloads/logstash/logstash-6.3.2.deb
+        dest: /root/logstash-6.3.2.deb
+
+  - name: Download Kibana package
+    get_url:
+        url: https://artifacts.elastic.co/downloads/kibana/kibana-6.3.2-amd64.deb
+        dest: /root/kibana-6.3.2-amd64.deb
+ 
+  - name: Install ELK packages
+    command: "{{item}}"
+    with_items:
+        - dpkg -i /root/elasticsearch-6.3.2.deb
+        - dpkg -i /root/logstash-6.3.2.deb
+        - dpkg -i /root/kibana-6.3.2-amd64.deb
+
+  - name: Backup Elasticsearch JVM options config file
+    copy:
+        src: /etc/elasticsearch/jvm.options
+        dest: /etc/elasticsearch/jvm.options.bak
+        remote_src: yes
+ 
+  - name: Backup Logstash JVM options config file
+    copy:
+        src: /etc/logstash/jvm.options
+        dest: /etc/logstash/jvm.options.bak
+        remote_src: yes
+
+  - name: Configure Elasticsearch JVM options
+    copy:
+        src: /root/elasticsearch.jvm.options
+        dest: /etc/elasticsearch/jvm.options
+        mode: 0660
+
+  - name: Configure Logstash JVM options
+    copy:
+        src: /root/logstash.jvm.options
+        dest: /etc/logstash/jvm.options
+        mode: 0660
+
+  - name: Start ELK
+    service:
+        name: "{{item}}"
+        state: restarted
+    with_items: 
+        - elasticsearch
+        - kibana
+        - logstash
+

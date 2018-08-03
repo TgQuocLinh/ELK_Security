@@ -4,7 +4,7 @@
 
 Các bước thực hiện setup ELK:
 1. Cài đặt Elasticserach, Kibana, Logstash
-2. Chỉnh heap size cho ES và Kibana. Dùng file jvm.options đã được config sẵn, copy file jvm.options mới sang ELK server và backup file jvm.options cũ, file mới sẽ thay thế vai trò của file cũ.
+2. Chỉnh heap size cho ES và Logstash. Dùng file jvm.options đã được config sẵn, copy file jvm.options mới sang ELK server và backup file jvm.options cũ, file mới sẽ thay thế vai trò của file cũ.
 3. Start ELK
 
 Các bước thực hiện setup security:

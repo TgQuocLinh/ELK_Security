@@ -1,0 +1,43 @@
+- hosts: es_server
+  remote_user: root
+
+  tasks:
+
+  - name: Install NGINX
+    apt: 
+       name: nginx
+       state: present
+
+  - name: Start NGINX
+    service:
+       name: nginx
+       state: started
+
+  - name: Make sure we can use htpasswd module
+    apt: "pkg=python-passlib state=present"
+
+  - name: Creat username/password for authentication
+    htpasswd:
+        path: /etc/nginx/.authpasswd
+        name: devteam
+        password: 'm7a6e5t4v3e2d1'
+        owner: root
+        group: www-data
+        mode: 0640
+
+  - name: Copy config file for ELK security to ELK server
+    copy: 
+       src: /root/elk_nginx_secur
+       dest: /etc/nginx/sites-available/elk_nginx_secur
+       mode: 0644
+
+  - name: Enable security for ELK
+    file: 
+       src: /etc/nginx/sites-available/elk_nginx_secur 
+       dest: /etc/nginx/sites-enabled/elk_nginx_secur
+       state: link
+
+  - name: Reload NGINX
+    service:
+       name: nginx
+       state: reloaded

@@ -9,6 +9,6 @@ Các bước thực hiện setup ELK:
 
 Các bước thực hiện setup security:
 1. Cài đặt NGINX.
-2. Tạo username/pasword qua htppasswd.
+2. Tạo username/password qua htppasswd.
 3. Config security. Copy file config có sẵn sang thư mục /.../nginx/sites-available và enable nó.
 4. Truy cập ES và Kibana qua kết nối VPN.
